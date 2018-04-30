@@ -1,0 +1,66 @@
+{% extends './layout.html' %}
+{% block title%}Camplink首页{% endblock %}
+{% block styles%}
+	{{css}}
+	<base target='_blank'>
+{% endblock %}
+{% block content %}
+	{% include './widget/header.html' %}
+	{% include './widget/content.html' %}
+	{% include './widget/footer.html' %}
+{% endblock %}
+{% block scripts %}
+	<script src="http://yui.yahooapis.com/3.5.1/build/yui/yui-min.js"></script>
+	{{js}}
+	<script type="text/javascript">
+    $(function(){
+        $('.index_icon').addClass('active').attr('id','user_active');
+        $('.about_icon').removeClass('active').attr('id',"");
+    })
+    YUI({
+        modules: {
+            'trip-calendar': {
+                fullpath: '/scripts/trip-calendar.js',
+                type    : 'js',
+                requires: ['trip-calendar-css']
+            },
+            'trip-calendar-css': {
+                fullpath: '/styles/trip-calendar.css',
+                type    : 'css'
+            }
+        }
+    }).use('trip-calendar', function(Y) {
+        
+        var oCal = new Y.TripCalendar({
+            minDate         : new Date,     //最小时间限制
+            triggerNode     : '#J_DepDate', //第一个触节点
+            finalTriggerNode: '#J_EndDate'  //最后一个触发节点
+        });
+        var sVal='';
+        Y.one('#J_DepDate').on('blur',function(e){
+            var timer=setInterval(function(){
+                var val=$('#J_DepDate').val();
+                sVal=val;
+                if(val && val.indexOf('至')==-1){
+                    $('.depDiv').hide()
+                    $('.endDiv').show()
+                    Y.one('#J_EndDate').focus();
+                    $('#J_EndDate').val(sVal+'至')
+                    clearInterval(timer);
+                }
+            },20)
+        })
+        Y.one('#J_EndDate').on('blur',function(e){
+            var timer=setInterval(function(){
+                var val=$('#J_EndDate').val();
+                if(val && val.indexOf('至')==-1){
+                    $('#J_DepDate').val(sVal+'至'+val)
+                    $('.endDiv').hide()
+                    $('.depDiv').show()
+                    clearInterval(timer);
+                }
+            },20)
+        })
+    });
+</script>
+{% endblock %}

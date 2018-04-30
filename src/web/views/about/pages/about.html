@@ -1,0 +1,19 @@
+{% extends './layout.html' %}
+{% block title%}Camplink-关于青谷{% endblock %}
+{% block styles%}
+	{{css}}
+{% endblock %}
+{% block content %}
+	{% include './widget/header.html' %}
+	{% include './widget/about.html' %}
+	{% include './widget/footer.html' %}
+{% endblock %}
+{% block scripts %}
+	{{js}}
+	<script type="text/javascript">
+		$(function(){
+        	$('.index_icon').removeClass('active').attr('id','');
+        	$('.about_icon').addClass('active').attr('id',"user_active");
+	    })
+	</script>
+{% endblock %}
